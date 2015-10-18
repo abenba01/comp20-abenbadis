@@ -1,3 +1,6 @@
+xhr = new XMLHttpRequest();
+xhr.open("get", "data.json", true);
+
 function parse() {
 	jsondata = 'data.json';
 	parsedObjects = JSON.parse(jsondata);
