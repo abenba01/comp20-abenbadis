@@ -3,11 +3,11 @@ xhr.open("get", "data.json", true);
 
 
 function parse() {
-	
+	parsedObjects = JSON.parse("data.json");
 	elem = document.getElementById("messages");
-	for (count = 0; count < elem.length; count++) {
-		console.log(Object.keys(elem[count]));
-		elem.innerHTML += elem[count]["content"] + elem[count]["username"];
+	for (count = 0; count < parsedObjects.length; count++) {
+		console.log(Object.keys(parsedObjects[count]));
+		elem.innerHTML += parsedObjects[count]["content"] + xhr[count]["username"];
 	}
 
 }
