@@ -3,10 +3,11 @@ xhr.open("get", "data.json", true);
 
 function parse() {
 	
+	data = data.json;	
 	elem = document.getElementById("messages");
-	for (count = 0; count < data.json.length; count++) {
+	for (count = 0; count < data.length; count++) {
 
-		elem.innerHTML += json.data[count]["content"] + json.data[count]["username"];
+		elem.innerHTML += data[count]["content"] + data[count]["username"];
 
 	}
 
