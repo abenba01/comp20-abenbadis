@@ -1,8 +1,8 @@
 xhr = new XMLHttpRequest();
-jsondata = xhr.open("get", "data.json", true);
+xhr.open("get", "data.json", true);
 
 function parse() {
-	parsedObjects = JSON.parse(jsondata);
+	parsedObjects = JSON.parse(data.json);
 	elem = document.getElementById("messages");
 	for (count = 0; count < parsedObjects.length; count++) {
 
