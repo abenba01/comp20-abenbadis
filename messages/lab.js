@@ -3,7 +3,7 @@ xhr.open("get", "data.json", true);
 
 
 function parse() {
-	parsedObjects = JSON.parse(xhr);
+	parsedObjects = JSON;
 	elem = document.getElementById("messages");
 	for (count = 0; count < parsedObjects.length; count++) {
 		console.log(Object.keys(parsedObjects[count]));
