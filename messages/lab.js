@@ -8,7 +8,7 @@ function parse() {
 	for (count = 0; count < parsedObjects.length; count++) {
 
 		console.log(Object.keys(parsedObjects[count]));
-		elem.innerHTML = parsedObjects[count]["username"];
+		elem.innerHTML += parsedObjects[count]["content"] + parsedObjects[count]["username"];
 
 	}
 
