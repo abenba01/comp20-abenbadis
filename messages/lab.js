@@ -7,7 +7,7 @@ function parse() {
 	elem = document.getElementById("messages");
 	for (count = 0; count < data.length; count++) {
 		console.log(Object.keys(data[count]));
-		elem.innerHTML += data[count]["content"] + data[count]["username"];
+		data[count]["content"] + data[count]["username"];
 
 	}
 
