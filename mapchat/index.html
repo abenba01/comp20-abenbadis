@@ -10,7 +10,7 @@
 	<script>
 		var myLat = 0;
 		var myLng = 0;
-		var myID = "abenbadis";
+		var myID = "Lee Miller";
 		var myMessage = "I solemnly swear that I am up to no good";
 		var request = new XMLHttpRequest();
 		var me = new google.maps.LatLng(myLat, myLng);
@@ -43,11 +43,14 @@
 					myLat = position.coords.latitude;
 					myLng = position.coords.longitude;
 					renderMap();
+
 					// NOT PRINTING? Not getting my position???
 					console.log(myLat);
 					console.log(myLng);
 					// MAKE SURE TO DELETE ABOVE
 				});
+
+				sendLocation();
 
 			}
 			else {
@@ -57,11 +60,14 @@
 
 		function sendLocation(myLat, myLng){
 
+			console.log("in sendlocation");
+
 			myData = "login="+myID+"&lat="+myLat+"&lng="+myLng+"&message="+myMessage;
 
 			xhr = new XMLHttpRequest();
 			xhr.open("POST", server, true);
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			console.log("about to call parseData");
 			xhr.onreadystatechange = parseData;
 			xhr.send(myData);
 
@@ -70,19 +76,25 @@
 		function parseData() {
 			//BROWSER??
 			console.log("entered parseData");
-			if ((xhr.onreadystatechange == 4) && (xhr.status == 200)) {
+			if ((xhr.readyState == 4) && (xhr.status == 200)) {
+				console.log("about to parse data");
 				data = JSON.parse(xhr.responseText);
 				console.log("success!");
-				colsole.log(data["login"]);
+				console.log(data["login"]);
 
 			//PARSE DATA FROM SERVER
 			//GET DATA FROM OTHERS
 
 			}
+			else {
+
+				console.log("Not good RSC or Status");
+			}				
 
 		}
 
 		function renderMap() {
+			console.log("render map");
 
 			me = new google.maps.LatLng(myLat, myLng);
 
