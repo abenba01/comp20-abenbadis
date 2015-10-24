@@ -9,7 +9,6 @@ function parse() {
 			elem = document.getElementById("messages");
 
 			for ( count = 0; count < parsedObjects.length; count++){
-				console.log(Object.keys(parsedObjects[count]));
 				elem.innerHTML += "<h3>" + parsedObjects[count]["content"] + "</h3>" + "<p>" + parsedObjects[count]["username"] + "</p>";
 
 			}
