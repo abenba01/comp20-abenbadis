@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<title>Marauder's Map</title>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+	<link rel="stylesheet" href="mapstyle.css" type="text/css" />
+	
+	<script>
+		var myLat = 0;
+		var myLng = 0;
+		var myID = "abenbadis";
+		var myMessage = "I solemnly swear that I am up to no good";
+		var request = new XMLHttpRequest();
+		var me = new google.maps.LatLng(myLat, myLng);
+		var server = 'https://secret-about-box.herokuapp.com/sendLocation';
+		var myOptions = {
+
+							zoom: 13,
+							center: me,
+							mapTypeId: google.maps.MapTypeId.ROADMAP
+						};
+		var map;
+		var marker;
+		var infowindow = new google.maps.InfoWindow();
+
+		function init() {
+
+			map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+			getMyLocation();
+
+					// MAKE SURE TO DELETE THESE
+					console.log(myLat);
+					console.log(myLng);
+					// MAKE SURE TO DELETE ABOVE
+		}
+
+		function getMyLocation() {
+
+			if(navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition( function(position) {
+					myLat = position.coords.latitude;
+					myLng = position.coords.longitude;
+					renderMap();
+					// NOT PRINTING? Not getting my position???
+					console.log(myLat);
+					console.log(myLng);
+					// MAKE SURE TO DELETE ABOVE
+				});
+
+			}
+			else {
+				alert("Oops! Something has gone wrong! Make sure that your web browser supports geolocation.");
+			}
+		}
+
+		function sendLocation(myLat, myLng){
+
+			myData = "login="+myID+"&lat="+myLat+"&lng="+myLng+"&message="+myMessage;
+
+			xhr = new XMLHttpRequest();
+			xhr.open("POST", server, true);
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr.onreadystatechange = parseData;
+			xhr.send(myData);
+
+		}
+
+		function parseData() {
+			//BROWSER??
+			console.log("entered parseData");
+			if ((xhr.onreadystatechange == 4) && (xhr.status == 200)) {
+				data = JSON.parse(xhr.responseText);
+				console.log("success!");
+				colsole.log(data["login"]);
+
+			//PARSE DATA FROM SERVER
+			//GET DATA FROM OTHERS
+
+			}
+
+		}
+
+		function renderMap() {
+
+			me = new google.maps.LatLng(myLat, myLng);
+
+			map.panTo(me);
+
+			marker = new google.maps.Marker({
+					position: me,
+					title: "Here I am!"
+			});
+
+			marker.setMap(map);
+
+			google.maps.event.addListener(marker,'click', function() {
+				infowindow.setContent(marker.title);
+				infowindow.open(map, marker);
+			})
+
+		}
+	</script>
+</head>
+<body onload="init()">
+	<div id="map_canvas"></div>
+</body>
+
+</html>
+
