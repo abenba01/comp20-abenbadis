@@ -82,34 +82,16 @@
 
 
 		function parseData() {
-			console.log("entered parseData");
-			//parse my data
 			if ((xhr.readyState == 4) && (xhr.status == 200)) {
 				console.log("about to parse data");
 				data = JSON.parse(xhr.responseText);
 				console.log("successfully parsed!");
 				console.log(data);
-
-			//parse data from server
-			/*console.log("parsing data from server");
-			xhr2 = new XMLHttpRequest();
-			xhr2.open("GET",server,true);
-			xhr2.onreadystatechange = function(){
-				serverData = JSON.parse(xhr2.responseText);
-				console.log("serverData: "+serverData);
-			}*/
-				
-			}
-
-
-
-			//GET DATA FROM OTHERS
+				}
 
 			}		
 
-
 		function renderMap() {
-			console.log("render map");
 
 			me = new google.maps.LatLng(myLat, myLng);
 
