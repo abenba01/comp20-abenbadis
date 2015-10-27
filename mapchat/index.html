@@ -10,7 +10,7 @@
 	<script>
 		var myLat = 0;
 		var myLng = 0;
-		var myID = "Lee Miller";
+		var myID = "LeeMiller";
 		var myMessage = "I solemnly swear that I am up to no good";
 		var request = new XMLHttpRequest();
 		var me = new google.maps.LatLng(myLat, myLng);
@@ -31,8 +31,8 @@
 			getMyLocation();
 
 					// MAKE SURE TO DELETE THESE
-					console.log(myLat);
-					console.log(myLng);
+					console.log("init Lat: "+myLat);
+					console.log("init Lng: "+myLng);
 					// MAKE SURE TO DELETE ABOVE
 		}
 
@@ -42,36 +42,44 @@
 				navigator.geolocation.getCurrentPosition( function(position) {
 					myLat = position.coords.latitude;
 					myLng = position.coords.longitude;
+					
+
 					renderMap();
 
-					// NOT PRINTING? Not getting my position???
-					console.log(myLat);
-					console.log(myLng);
-					// MAKE SURE TO DELETE ABOVE
-				});
+					
+					console.log("getmylocation lat: "+myLat);
+					console.log("getmylocation lng: "+myLng);
+					
+					console.log
 
-				sendLocation();
+				//sendlocations starts
+				console.log("sending location");
+
+				myData = "login="+myID+"&lat="+myLat+"&lng="+myLng+"&message="+myMessage;
+
+				xhr = new XMLHttpRequest();
+				xhr.open("POST", server, true);
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				console.log("parseData")
+				xhr.onreadystatechange = parseData;
+				xhr.send(myData);
+				console.log("printing data in sendlocation");
+				//they're undefined.. is that what is wrong with my data? this needs to wait until get my location is done
+				console.log("sendlocation Lat: "+myLat);
+				console.log("sendlocation Lng: "+myLng);
+				//sendlocation ends
+
+				});
+				
 
 			}
 			else {
-				alert("Oops! Something has gone wrong! Make sure that your web browser supports geolocation.");
+				alert("Oops! Something has gone wrong. Make sure that your web browser supports geolocation.");
 			}
-		}
 
-		function sendLocation(myLat, myLng){
-
-			console.log("in sendlocation");
-
-			myData = "login="+myID+"&lat="+myLat+"&lng="+myLng+"&message="+myMessage;
-
-			xhr = new XMLHttpRequest();
-			xhr.open("POST", server, true);
-			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			console.log("about to call parseData");
-			xhr.onreadystatechange = parseData;
-			xhr.send(myData);
 
 		}
+
 
 		function parseData() {
 			console.log("entered parseData");
@@ -79,15 +87,18 @@
 			if ((xhr.readyState == 4) && (xhr.status == 200)) {
 				console.log("about to parse data");
 				data = JSON.parse(xhr.responseText);
-				console.log("success!");
-				console.log(data["login"]);
+				console.log("successfully parsed!");
+				console.log(data);
 
 			//parse data from server
+			/*console.log("parsing data from server");
 			xhr2 = new XMLHttpRequest();
 			xhr2.open("GET",server,true);
 			xhr2.onreadystatechange = function(){
 				serverData = JSON.parse(xhr2.responseText);
-				console.log(serverData);
+				console.log("serverData: "+serverData);
+			}*/
+				
 			}
 
 
@@ -96,7 +107,6 @@
 
 			}		
 
-		}
 
 		function renderMap() {
 			console.log("render map");
