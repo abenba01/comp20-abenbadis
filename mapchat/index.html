@@ -12,7 +12,6 @@
 		var myLng = 0;
 		var myID = "LeeMiller";
 		var myMessage = "I solemnly swear that I am up to no good";
-		var request = new XMLHttpRequest();
 		var me = new google.maps.LatLng(myLat, myLng);
 		var server = 'https://secret-about-box.herokuapp.com/sendLocation';
 		var myOptions = {
@@ -22,7 +21,6 @@
 							mapTypeId: google.maps.MapTypeId.ROADMAP
 						};
 		var map;
-		var marker;
 		var infowindow = new google.maps.InfoWindow();
 
 		function init() {
@@ -30,10 +28,6 @@
 			map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 			getMyLocation();
 
-					// MAKE SURE TO DELETE THESE
-					console.log("init Lat: "+myLat);
-					console.log("init Lng: "+myLng);
-					// MAKE SURE TO DELETE ABOVE
 		}
 
 		function getMyLocation() {
@@ -42,51 +36,29 @@
 				navigator.geolocation.getCurrentPosition( function(position) {
 					myLat = position.coords.latitude;
 					myLng = position.coords.longitude;
-					
-
-					renderMap();
-
-					
-					console.log("getmylocation lat: "+myLat);
-					console.log("getmylocation lng: "+myLng);
-					
-					console.log
-
-				//sendlocations starts
-				console.log("sending location");
 
 				myData = "login="+myID+"&lat="+myLat+"&lng="+myLng+"&message="+myMessage;
 
 				xhr = new XMLHttpRequest();
 				xhr.open("POST", server, true);
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				console.log("parseData")
 				xhr.onreadystatechange = parseData;
 				xhr.send(myData);
-				console.log("printing data in sendlocation");
-				//they're undefined.. is that what is wrong with my data? this needs to wait until get my location is done
-				console.log("sendlocation Lat: "+myLat);
-				console.log("sendlocation Lng: "+myLng);
-				//sendlocation ends
-
+				
 				});
 				
-
 			}
 			else {
 				alert("Oops! Something has gone wrong. Make sure that your web browser supports geolocation.");
 			}
 
-
 		}
-
 
 		function parseData() {
 			if ((xhr.readyState == 4) && (xhr.status == 200)) {
-				console.log("about to parse data");
 				data = JSON.parse(xhr.responseText);
-				console.log("successfully parsed!");
 				console.log(data);
+				renderMap();
 				}
 
 			}		
@@ -97,23 +69,49 @@
 
 			map.panTo(me);
 
-			marker = new google.maps.Marker({
+			var marker = new google.maps.Marker({
 					position: me,
-					title: "Here I am!"
+					title: myID + ": " + myMessage,
+					icon: "myIcon.jpeg"
 			});
 
 			marker.setMap(map);
 
+			for (count = 0; count < data.length; count++)
+			{
+				console.log(data[count]);
+				var other_marker = new google.maps.Marker({
+					position: new google.maps.LatLng(data[count].lat,data[count].lng),
+					title: data[count].login + ": " + data[count].message
+				});
+
+				var message = data[count].message;
+				console.log(message);
+				//var distance_from_me = 
+
+				other_marker.setMap(map);
+
+				google.maps.event.addListener(other_marker,'click', function() {
+					//longin, messages, miles away from me
+					infowindow.setContent(this.title);
+					infowindow.open(map, this);
+				});
+			}
+
 			google.maps.event.addListener(marker,'click', function() {
 				infowindow.setContent(marker.title);
 				infowindow.open(map, marker);
-			})
+			});
 
 		}
+
 	</script>
 </head>
+
 <body onload="init()">
+
 	<div id="map_canvas"></div>
+
 </body>
 
 </html>
