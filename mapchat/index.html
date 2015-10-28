@@ -84,7 +84,7 @@
 
 					var other_marker = new google.maps.Marker({
 						position: new google.maps.LatLng(data[count].lat,data[count].lng),
-						title: "<div id = 'display'>" + data[count].login + ": " + data[count].message + "<br>Distance from me: " + distance_from_me + " miles" + "</div>"
+						title: "<p>" + data[count].login + ": " + data[count].message + "<br>Distance from me: " + distance_from_me + " miles" + "</p>"
 					});
 
 					var message = data[count].message;
