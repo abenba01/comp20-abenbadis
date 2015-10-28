@@ -12,17 +12,14 @@
 		var myLng = 0;
 		var myID = "LeeMiller";
 		var myMessage = "I solemnly swear that I am up to no good";
-		var request = new XMLHttpRequest();
 		var me = new google.maps.LatLng(myLat, myLng);
 		var server = 'https://secret-about-box.herokuapp.com/sendLocation';
 		var myOptions = {
-
 							zoom: 13,
 							center: me,
 							mapTypeId: google.maps.MapTypeId.ROADMAP
 						};
 		var map;
-		var marker;
 		var infowindow = new google.maps.InfoWindow();
 
 		function init() {
@@ -30,10 +27,6 @@
 			map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 			getMyLocation();
 
-					// MAKE SURE TO DELETE THESE
-					console.log("init Lat: "+myLat);
-					console.log("init Lng: "+myLng);
-					// MAKE SURE TO DELETE ABOVE
 		}
 
 		function getMyLocation() {
@@ -42,96 +35,111 @@
 				navigator.geolocation.getCurrentPosition( function(position) {
 					myLat = position.coords.latitude;
 					myLng = position.coords.longitude;
-					
-
-					renderMap();
-
-					
-					console.log("getmylocation lat: "+myLat);
-					console.log("getmylocation lng: "+myLng);
-					
-					console.log
-
-				//sendlocations starts
-				console.log("sending location");
 
 				myData = "login="+myID+"&lat="+myLat+"&lng="+myLng+"&message="+myMessage;
 
 				xhr = new XMLHttpRequest();
 				xhr.open("POST", server, true);
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				console.log("parseData")
 				xhr.onreadystatechange = parseData;
 				xhr.send(myData);
-				console.log("printing data in sendlocation");
-				//they're undefined.. is that what is wrong with my data? this needs to wait until get my location is done
-				console.log("sendlocation Lat: "+myLat);
-				console.log("sendlocation Lng: "+myLng);
-				//sendlocation ends
-
+				
 				});
 				
-
 			}
 			else {
 				alert("Oops! Something has gone wrong. Make sure that your web browser supports geolocation.");
 			}
 
-
 		}
 
-
 		function parseData() {
-			console.log("entered parseData");
-			//parse my data
 			if ((xhr.readyState == 4) && (xhr.status == 200)) {
-				console.log("about to parse data");
 				data = JSON.parse(xhr.responseText);
-				console.log("successfully parsed!");
-				console.log(data);
-
-			//parse data from server
-			/*console.log("parsing data from server");
-			xhr2 = new XMLHttpRequest();
-			xhr2.open("GET",server,true);
-			xhr2.onreadystatechange = function(){
-				serverData = JSON.parse(xhr2.responseText);
-				console.log("serverData: "+serverData);
-			}*/
-				
-			}
-
-
-
-			//GET DATA FROM OTHERS
+				renderMap();
+				}
 
 			}		
 
-
 		function renderMap() {
-			console.log("render map");
 
 			me = new google.maps.LatLng(myLat, myLng);
 
 			map.panTo(me);
 
-			marker = new google.maps.Marker({
+			var marker = new google.maps.Marker({
 					position: me,
-					title: "Here I am!"
+					title: myID + ": " + myMessage,
+					icon: "myIcon.png"
 			});
 
 			marker.setMap(map);
 
+			for (count = 0; count < data.length; count++)
+			{
+				if (data[count].login != myID) { // don't display me twice
+
+					var distance_from_me = getDistance(myLat, myLng, data[count].lat, data[count].lng);
+
+
+					var other_marker = new google.maps.Marker({
+						position: new google.maps.LatLng(data[count].lat,data[count].lng),
+						title: "<p>" + data[count].login + ": " + data[count].message + "<br>Distance from me: " + distance_from_me + " miles" + "</p>"
+					});
+
+					var message = data[count].message;
+
+					other_marker.setMap(map);
+
+					google.maps.event.addListener(other_marker,'click', function() {
+						infowindow.setContent(this.title);
+						infowindow.open(map, this);
+					});	
+				
+				}
+				
+			}
+
 			google.maps.event.addListener(marker,'click', function() {
 				infowindow.setContent(marker.title);
 				infowindow.open(map, marker);
-			})
+			});
 
 		}
+
+		function getDistance(lat1, lng1, lat2, lng2){
+			// formula from http://www.movable-type.co.uk/scripts/latlong.html
+			var R = 6371000 // meters
+			var miles_converter = 0.000621371;
+			var phi1 = toRadians(lat1);
+			var phi2 = toRadians(lat2);
+			var dphi = toRadians(lat2-lat1);
+			var dlam = toRadians(lng2-lng1);
+
+			var a = Math.sin(dphi/2) * Math.sin(dphi/2) + Math.cos(phi1) * Math.cos(phi2) * Math.sin(dlam/2) * Math.sin(dlam/2);
+			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+			var d = R * c;
+
+			d = d * miles_converter;
+
+			return d;
+		}
+
+		function toRadians(x) {
+
+   			return x * Math.PI / 180;
+
+		}
+
 	</script>
+
 </head>
+
 <body onload="init()">
+
 	<div id="map_canvas"></div>
+
 </body>
 
 </html>
