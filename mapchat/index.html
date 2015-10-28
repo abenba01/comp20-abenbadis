@@ -69,7 +69,7 @@
 
 			var marker = new google.maps.Marker({
 					position: me,
-					title: myID + ": " + myMessage,
+					title: "<p>" + myID + ": " + myMessage + "</p>",
 					icon: "myIcon.png"
 			});
 
@@ -80,7 +80,6 @@
 				if (data[count].login != myID) { // don't display me twice
 
 					var distance_from_me = getDistance(myLat, myLng, data[count].lat, data[count].lng);
-
 
 					var other_marker = new google.maps.Marker({
 						position: new google.maps.LatLng(data[count].lat,data[count].lng),
@@ -95,9 +94,7 @@
 						infowindow.setContent(this.title);
 						infowindow.open(map, this);
 					});	
-				
 				}
-				
 			}
 
 			google.maps.event.addListener(marker,'click', function() {
