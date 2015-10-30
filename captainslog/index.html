@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Captain's Log</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('input').keypress(function(e) {
+		   		if(e.which == 13) {
+		        	console.log("enter was pressed. entering data...");
+		        	// get the message
+		        	$('#log').html = $('#msg').value + "<br>" + $('#log').html;
+		        	// get date and add it to the message in correct format
+		        	//DO THAT HERE
+		        	// add to localstorage.. prepend?
+		        	//DO THAT HERE
+		        	$("#log").prepend($("#msg"));
+					output = "";
+					for (key in localStorage) {
+						output = localStorage[key] + "<p>" + output + "</p>\n";
+					}
+					$("#log").html = output;
+
+					txt = $("#msg");
+					localStorage[new Date().getTime()] = txt;
+		    	}
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<h1>Captain's Log</h1>
+	<h3>New entry: <input type="text" id="msg" name="msg" size="30" /></h3>
+	<div id="log"></div>
+</body>
+</html>
