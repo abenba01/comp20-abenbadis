@@ -9,23 +9,36 @@
 		$(document).ready(function() {
 			$('input').keypress(function(e) {
 		   		if(e.which == 13) {
-		        	console.log("enter was pressed. entering data...");
-		        	// get the message
-		        	$('#log').html = $('#msg').value + "<br>" + $('#log').html;
-		        	// get date and add it to the message in correct format
-		        	//DO THAT HERE
-		        	// add to localstorage.. prepend?
-		        	//DO THAT HERE
-		        	$("#log").prepend($("#msg"));
-					output = "";
-					for (key in localStorage) {
-						output = localStorage[key] + "<p>" + output + "</p>\n";
-					}
-					$("#log").html = output;
 
-					txt = $("#msg");
+		   			$("#log");
+
+		   			var timestamp = new Date();
+		   			day_week = timestamp.getDay(); //day of week
+		   			month = timestamp.getMonth(); //month
+		   			day_month = timestamp.getDate(); //day of month
+		   			hour = timestamp.getHours(); //hour
+		   			minute = timestamp.getMinutes(); //minutes
+		   			seconds = timestamp.getSeconds(); //seconds
+		   			year = timestamp.getYear();
+
+					output = timestamp + " - " + $("#msg").val();
+
+					localStorage.setItem('msg', output);
+
+					for (key in localStorage) {
+						if (key != "phrase") {
+							output = localStorage[key] + "<br>" + output;
+						}
+					}
+					
+					output = $("#log").html(output);
+
+					txt = timestamp + " - " + $("#msg").val();
 					localStorage[new Date().getTime()] = txt;
-		    	}
+		    	
+				}
+	
+	
 			});
 		});
 	</script>
